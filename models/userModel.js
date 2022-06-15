@@ -6,7 +6,7 @@ dotenv.config()
 const userSchema = new mongoose.Schema(
 	{
 		fullName: String,
-		email: { type: String, unique: true },
+		email: { type: String, unique: true, sparse: true },
 		userName: { type: String, unique: true, required: true },
 		password: String,
 	},

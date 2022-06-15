@@ -9,10 +9,15 @@ const register = async (req, res) => {
 			return res.status(400).send(error.details[0].message)
 		}
 
-		const user = await Users.findOne({
+		let user = await Users.findOne({
 			userName: req.body.userName,
-			email: req.body.email,
 		})
+		if(!user) {
+			user = await Users.findOne({
+				email: req.body.email,
+			})
+		}
+
 		if (user) {
 			return res.status(409).send("User already exists")
 		}
@@ -21,14 +26,12 @@ const register = async (req, res) => {
 		const hash = await bcrypt.hash(req.body.password, salt)
 
 		await new Users({
-			fullName: req.body.fullName,
-			userName: req.body.userName,
-			email: req.body.email,
+			...req.body,
 			password: hash,
 		}).save()
 		res.status(201).send("User created successfully")
 	} catch (err) {
-		res.status(500).send(err)
+		res.status(500).send(err.message)
 	}
 }
 
