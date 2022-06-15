@@ -1,8 +1,45 @@
-import Users from '../../models/userModel.js'
+import Users from "../../models/userModel.js"
+import joi from "joi"
+import bcrypt from "bcrypt"
 
-const register = (req, res) => {
-    console.log(req.body)
-    
+const register = async (req, res) => {
+	try {
+		const { error } = validate(req.body)
+		if (error) {
+			return res.status(400).send(error.details[0].message)
+		}
+
+		const user = await Users.findOne({
+			userName: req.body.userName,
+			email: req.body.email,
+		})
+		if (user) {
+			return res.status(409).send("User already exists")
+		}
+
+		const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS))
+		const hash = await bcrypt.hash(req.body.password, salt)
+
+		await new Users({
+			fullName: req.body.fullName,
+			userName: req.body.userName,
+			email: req.body.email,
+			password: hash,
+		}).save()
+		res.status(201).send("User created successfully")
+	} catch (err) {
+		res.status(500).send(err)
+	}
+}
+
+const validate = (data) => {
+	const schema = joi.object({
+		fullName: joi.string().min(2).required(),
+		userName: joi.string().min(6).required(),
+		email: joi.string().email(),
+		password: joi.string().min(6).required(),
+	})
+	return schema.validate(data)
 }
 
 export default register
