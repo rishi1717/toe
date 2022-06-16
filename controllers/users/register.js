@@ -6,13 +6,14 @@ const register = async (req, res) => {
 	try {
 		const { error } = validate(req.body)
 		if (error) {
+			console.log(error.message)
 			return res.status(400).send(error.details[0].message)
 		}
 
 		let user = await Users.findOne({
 			userName: req.body.userName,
 		})
-		if(!user) {
+		if (!user) {
 			user = await Users.findOne({
 				email: req.body.email,
 			})
@@ -39,7 +40,7 @@ const validate = (data) => {
 	const schema = joi.object({
 		fullName: joi.string().min(2).required(),
 		userName: joi.string().min(6).required(),
-		email: joi.string().email(),
+		email: joi.string().email().allow(""),
 		password: joi.string().min(6).required(),
 	})
 	return schema.validate(data)
