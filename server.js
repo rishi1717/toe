@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import connect from './models/index.js'
 import userRoutes from './routes/userRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
 import xss from 'xss-clean'
@@ -26,6 +27,7 @@ app.use(cors())
 app.use(express.json({limit: '50kb'}))
 app.use(express.urlencoded({ extended: true }))
 
+app.use("/api/googleAuth", authRoutes)
 app.use('/api/users', userRoutes)
 
 app.get('/', (req, res) => {
