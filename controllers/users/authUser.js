@@ -16,7 +16,10 @@ const authUser = async (req, res) => {
 		const payload = ticket.getPayload()
 		let userName = payload.given_name
 
-		let user = await Users.findOne({ email: payload?.email })
+		let user = await Users.findOne(
+			{ email: payload?.email },
+			{ createdAt: 0, updatedAt: 0, __v: 0 }
+		)
 		if (!user) {
 			async function getUserName(userName) {
 				const userExists = await Users.exists({ userName: userName })
@@ -30,16 +33,22 @@ const authUser = async (req, res) => {
 				return userName
 			}
 			userName = await getUserName(userName)
-			console.log(userName)
 			user = await new Users({
 				email: payload.email,
 				fullName: payload.name,
 				userName: userName,
 			})
 			await user.save()
-			res.send({message:"user created", user})
+			const token = user.generateToken(user)
+			user.password = undefined
+			user = { ...user._doc, token }
+			res.send({ message: "user created", user })
+		} else {
+			const token = user.generateToken(user)
+			user.password = undefined
+			user = { ...user._doc, token }
+			res.send({ user, message: "user authorized" })
 		}
-		res.send({ user, token, message: "user authorized" })
 	} catch (err) {
 		console.log(err.message)
 	}
