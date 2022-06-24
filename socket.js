@@ -1,11 +1,15 @@
+import express from "express"
+import { createServer } from "http"
 import { Server } from "socket.io"
 
-export default (httpServer) => {
-    const io = new Server(httpServer,{
-        cors: {
-            origin: "*",
-        }
-    })
-    
-    return io
-}
+const app = express()
+const httpServer = createServer(app)
+const io = new Server(httpServer, {
+	/* options */
+})
+
+io.on("connection", (socket) => {
+	// ...
+})
+
+httpServer.listen(3000)

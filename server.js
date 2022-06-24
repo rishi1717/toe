@@ -7,10 +7,23 @@ import authRoutes from "./routes/authRoutes.js"
 import helmet from "helmet"
 import rateLimit from "express-rate-limit"
 import xss from "xss-clean"
+import { createServer } from "http"
+import { Server } from "socket.io"
 
 dotenv.config()
 connect
 const app = express()
+const httpServer = createServer(app)
+const io = new Server(httpServer, {
+	cors: {
+		origin: "*",
+	}
+})
+
+io.on("connection", (socket) => {
+	console.log("a user connected")
+})
+
 const port = process.env.PORT || 3000
 const limiter = rateLimit({
 	windowMs: 30 * 60 * 1000,
@@ -18,6 +31,10 @@ const limiter = rateLimit({
 	standardHeaders: true,
 	legacyHeaders: false,
 	message: "Too many requests from this IP, please try again after some time!",
+})
+
+io.on("connection", (socket) => {
+	console.log("a user connected")
 })
 
 app.use(xss())
@@ -30,6 +47,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use("/api/googleAuth", authRoutes)
 app.use("/api/users", userRoutes)
 
+
+
 app.all("*", (req, res, next) => {
 	const err = new Error(`Can't find ${req.originalUrl} on this server!`)
 	err.status = "Endpoint not found"
@@ -41,7 +60,7 @@ app.use((err, req, res, next) => {
 	res.status(err.statusCode).send(err.status)
 })
 
-app.listen(port, (err) => {
+httpServer.listen(port, (err) => {
 	if (err) {
 		console.log(err)
 	} else {
