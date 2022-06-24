@@ -9,6 +9,7 @@ import rateLimit from "express-rate-limit"
 import xss from "xss-clean"
 import { createServer } from "http"
 import { Server } from "socket.io"
+import socketMethods from "./socket.js"
 
 dotenv.config()
 connect
@@ -18,10 +19,6 @@ const io = new Server(httpServer, {
 	cors: {
 		origin: "*",
 	}
-})
-
-io.on("connection", (socket) => {
-	console.log("a user connected")
 })
 
 const port = process.env.PORT || 3000
@@ -34,7 +31,7 @@ const limiter = rateLimit({
 })
 
 io.on("connection", (socket) => {
-	console.log("a user connected")
+	socketMethods(io, socket)
 })
 
 app.use(xss())

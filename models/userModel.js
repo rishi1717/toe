@@ -9,6 +9,16 @@ const userSchema = new mongoose.Schema(
 		email: { type: String, unique: true, sparse: true },
 		userName: { type: String, unique: true, required: true },
 		password: String,
+		friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+		matches: [{ type: mongoose.Schema.Types.ObjectId, ref: "Match" }],
+		tournaments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tournament" }],
+		stats: {},
+		amountWon: { type: Number, default: 0 },
+		amountSpent: { type: Number, default: 0 },
+		walletAmount: { type: Number, default: 0 },
+		referalId: { type: String, unique: true, sparse: true },
+		referalCode: { type: String, unique: true, sparse: true },
+		referalCount: { type: Number, default: 0 },
 	},
 	{ timestamps: true }
 )
