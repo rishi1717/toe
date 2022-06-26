@@ -14,7 +14,6 @@ const guestRegister = async (req, res) => {
 			return guestId
 		}
         const guestId = await getGuestId('guest')
-        console.log(guestId, req.body)
         const guest = await new Guest({
             guestId: guestId,
         }).save()
