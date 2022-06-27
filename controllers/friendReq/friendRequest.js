@@ -8,6 +8,7 @@ const friendRequest = async (req, res) => {
 		res.status(200).json({ message: "Friend request sent!" })
 	} catch (err) {
 		console.log(err.message)
+        res.status(500).json({ message: "Something went wrong!" })
 	}
 }
 
