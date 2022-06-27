@@ -10,7 +10,7 @@ import rateLimit from "express-rate-limit"
 import xss from "xss-clean"
 import { createServer } from "http"
 import { Server } from "socket.io"
-import socketMethods from "./socket.js"
+import socketMethods from "./socketio/socket.js"
 
 dotenv.config()
 connect

@@ -5,6 +5,7 @@ dotenv.config()
 const guestSchema = new mongoose.Schema(
 	{
 		guestId: { type: String, unique: true, required: true },
+		active: { type: Boolean, default: false },
         
 	},
 	{ timestamps: true }

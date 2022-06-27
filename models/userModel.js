@@ -9,9 +9,12 @@ const userSchema = new mongoose.Schema(
 		email: { type: String, unique: true, sparse: true },
 		userName: { type: String, unique: true, required: true },
 		password: String,
+		active: { type: Boolean, default: false },
 		friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 		matches: [{ type: mongoose.Schema.Types.ObjectId, ref: "Match" }],
-		tournaments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tournament" }],
+		tournaments: [
+			{ type: mongoose.Schema.Types.ObjectId, ref: "Tournament" },
+		],
 		stats: {},
 		amountWon: { type: Number, default: 0 },
 		amountSpent: { type: Number, default: 0 },
@@ -24,8 +27,10 @@ const userSchema = new mongoose.Schema(
 )
 
 userSchema.methods.generateToken = (user) => {
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" })
-    return token
+	const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+		expiresIn: "1d",
+	})
+	return token
 }
 
 const Users = mongoose.model("user", userSchema)
