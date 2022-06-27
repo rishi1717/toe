@@ -5,6 +5,7 @@ import connect from "./models/index.js"
 import userRoutes from "./routes/userRoutes.js"
 import authRoutes from "./routes/authRoutes.js"
 import guestRoutes from "./routes/guestRoutes.js"
+import friendReqRoutes from "./routes/friendReqRoutes.js"
 import helmet from "helmet"
 import rateLimit from "express-rate-limit"
 import xss from "xss-clean"
@@ -45,6 +46,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use("/api/googleAuth", authRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/guests", guestRoutes)
+app.use("/api/friendreq", friendReqRoutes)
 
 
 
