@@ -1,6 +1,37 @@
+import Guests from "../models/guestModel.js"
+import Users from "../models/userModel.js"
 
 export default (io, socket) => {
-	socket.on("connection", (socket) => {
-		console.log(socket)
+	let userId = null
+	socket.on("connection", async (socket) => {
+		try {
+			userId = socket._id
+			let user = await Users.findById(socket._id)
+			if (!user) {
+				user = await Guests.findById(socket._id)
+				await Guests.updateOne(
+					{ _id: socket._id },
+					{ $set: { active: true } }
+				)
+			} else {
+				await Users.updateOne(
+					{ _id: socket._id },
+					{ $set: { active: true } }
+				)
+			}
+		} catch (err) {
+			console.log(err.message)
+		}
+	})
+
+	socket.on("disconnect", async () => {
+		try {
+			if (userId) {
+				await Users.updateOne({ _id: userId }, { $set: { active: false } })
+				await Guests.updateOne({ _id: userId }, { $set: { active: false } })
+			}
+		} catch (err) {
+			console.log(err.message)
+		}
 	})
 }

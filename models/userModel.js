@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
 			{ type: mongoose.Schema.Types.ObjectId, ref: "Tournament" },
 		],
 		stats: {},
+		level: { type: Number, default: 0 },
 		amountWon: { type: Number, default: 0 },
 		amountSpent: { type: Number, default: 0 },
 		walletAmount: { type: Number, default: 0 },
