@@ -3,6 +3,7 @@ import register from '../controllers/users/register.js'
 import login from '../controllers/users/login.js'
 import userSearch from '../controllers/users/userSearch.js'
 import getFriendList from '../controllers/users/getFriendList.js'
+import getLeaderBoard from '../controllers/users/getLeaderBoard.js'
 
 const router = Router()
 
@@ -13,5 +14,7 @@ router.post("/login", login)
 router.get('/', userSearch)
 
 router.get('/friends/:id',getFriendList)
+
+router.get('/leaderBoard',getLeaderBoard)
 
 export default router

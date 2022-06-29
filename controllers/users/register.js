@@ -23,7 +23,7 @@ const register = async (req, res) => {
 			return res.status(409).send("User already exists")
 		}
 
-		if(!req.body.email) {
+		if (!req.body.email) {
 			req.body.email = undefined
 		}
 
@@ -33,11 +33,10 @@ const register = async (req, res) => {
 		await new Users({
 			...req.body,
 			password: hash,
-			stats: [0,0,0],
+			stats: [0, 0, 0, 0],
 		}).save()
 
 		res.status(201).send("User created successfully")
-		
 	} catch (err) {
 		console.log(err.message)
 		res.status(500).send(err.message)
