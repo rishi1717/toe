@@ -7,15 +7,15 @@ const userSchema = new mongoose.Schema(
 	{
 		fullName: String,
 		email: { type: String, unique: true, sparse: true },
-		userName: { type: String, unique: true, required: true },
-		password: String,
+		userName: { type: String, unique: true, required: true},
+		password: { type: String, required: true, minlength: 6,  },
 		active: { type: Boolean, default: false },
 		friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 		matches: [{ type: mongoose.Schema.Types.ObjectId, ref: "Match" }],
 		tournaments: [
 			{ type: mongoose.Schema.Types.ObjectId, ref: "Tournament" },
 		],
-		stats: {},
+		stats: [{type: Number}],
 		level: { type: Number, default: 0 },
 		amountWon: { type: Number, default: 0 },
 		amountSpent: { type: Number, default: 0 },

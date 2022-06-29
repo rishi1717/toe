@@ -13,7 +13,7 @@ const register = async (req, res) => {
 		let user = await Users.findOne({
 			userName: req.body.userName,
 		})
-		if (!user) {
+		if (!user && req.body.email) {
 			user = await Users.findOne({
 				email: req.body.email,
 			})
@@ -23,15 +23,23 @@ const register = async (req, res) => {
 			return res.status(409).send("User already exists")
 		}
 
+		if(!req.body.email) {
+			req.body.email = undefined
+		}
+
 		const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS))
 		const hash = await bcrypt.hash(req.body.password, salt)
 
 		await new Users({
 			...req.body,
 			password: hash,
+			stats: [0,0,0],
 		}).save()
+
 		res.status(201).send("User created successfully")
+		
 	} catch (err) {
+		console.log(err.message)
 		res.status(500).send(err.message)
 	}
 }
