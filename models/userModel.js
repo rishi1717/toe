@@ -10,10 +10,10 @@ const userSchema = new mongoose.Schema(
 		userName: { type: String, unique: true, required: true },
 		password: { type: String, minlength: 6 },
 		active: { type: Boolean, default: false },
-		friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-		matches: [{ type: mongoose.Schema.Types.ObjectId, ref: "Match" }],
+		friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+		matches: [{ type: mongoose.Schema.Types.ObjectId, ref: "match" }],
 		tournaments: [
-			{ type: mongoose.Schema.Types.ObjectId, ref: "Tournament" },
+			{ type: mongoose.Schema.Types.ObjectId, ref: "tournament" },
 		],
 		matchesPlayed: { type: Number, default: 0 },
 		matchesWon: { type: Number, default: 0 },

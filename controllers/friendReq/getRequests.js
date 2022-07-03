@@ -2,7 +2,7 @@ import FriendRequests from "../../models/friendRequests.js"
 
 const getRequests = async (req, res) => {
 	try {
-		const requests = await FriendRequests.find({ to: req.params.id })
+		const requests = await FriendRequests.find({ to: req.params.id, status:'pending' }).populate("from")
         res.status(200).json(requests)
 	} catch (err) {
 		console.log(err.message)
