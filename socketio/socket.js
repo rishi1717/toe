@@ -24,9 +24,20 @@ export default (io, socket) => {
 		}
 	})
 
+	socket.on("disconnection", async (socket) => {
+		try {
+				console.log(socket._id)
+				await Users.updateOne({ _id: socket._id }, { $set: { active: false } })
+				await Guests.updateOne({ _id: socket._id }, { $set: { active: false } })
+		} catch (err) {
+			console.log(err.message)
+		}
+	})
+
 	socket.on("disconnect", async () => {
 		try {
 			if (userId) {
+				console.log(userId)
 				await Users.updateOne({ _id: userId }, { $set: { active: false } })
 				await Guests.updateOne({ _id: userId }, { $set: { active: false } })
 			}
