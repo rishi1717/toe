@@ -5,8 +5,10 @@ const matchSchema = new mongoose.Schema(
 		player1: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 		player2: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 		winner: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-		entryFee: Number,
-		winningAmount: Number,
+		status: { type: String, default: "requested" },
+		entryFee: { type: Number, default: 0 },
+		income: { type: Number, default: 0 },
+		winningAmount: { type: Number, default: 0 },
 	},
 	{ timestamps: true }
 )
