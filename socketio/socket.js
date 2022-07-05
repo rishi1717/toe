@@ -18,6 +18,7 @@ export default (io, socket) => {
 					{ _id: socket._id },
 					{ $set: { active: true } }
 				)
+				io.emit("onlineUpdate")
 			}
 		} catch (err) {
 			console.log(err.message)
@@ -26,9 +27,9 @@ export default (io, socket) => {
 
 	socket.on("disconnection", async (socket) => {
 		try {
-				console.log(socket._id)
-				await Users.updateOne({ _id: socket._id }, { $set: { active: false } })
-				await Guests.updateOne({ _id: socket._id }, { $set: { active: false } })
+			console.log(socket._id)
+			await Users.updateOne({ _id: socket._id }, { $set: { active: false } })
+			io.emit("onlineUpdate")
 		} catch (err) {
 			console.log(err.message)
 		}
@@ -37,9 +38,8 @@ export default (io, socket) => {
 	socket.on("disconnect", async () => {
 		try {
 			if (userId) {
-				console.log(userId)
 				await Users.updateOne({ _id: userId }, { $set: { active: false } })
-				await Guests.updateOne({ _id: userId }, { $set: { active: false } })
+				io.emit("onlineUpdate")
 			}
 		} catch (err) {
 			console.log(err.message)
