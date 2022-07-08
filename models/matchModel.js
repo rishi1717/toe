@@ -9,6 +9,8 @@ const matchSchema = new mongoose.Schema(
 		entryFee: { type: Number, default: 0 },
 		income: { type: Number, default: 0 },
 		winningAmount: { type: Number, default: 0 },
+		playerXMoves: [{ type: Number, unique: true }],
+		playerOMoves: [{ type: Number, unique: true }],
 	},
 	{ timestamps: true }
 )
