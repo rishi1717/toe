@@ -3,9 +3,9 @@ import mongoose from "mongoose"
 const levelSchema = new mongoose.Schema(
 	{
 		name: { type: String, unique: true, required: true },
-        entryFee: Number,
-        winningAmount: Number,
-        pointsToWin: Number,
+		entryFee: { type: Number, required: true },
+		winningAmount: { type: Number, required: true },
+		pointsToWin: { type: Number, required: true },
 	},
 	{ timestamps: true }
 )

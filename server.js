@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js"
 import guestRoutes from "./routes/guestRoutes.js"
 import friendReqRoutes from "./routes/friendReqRoutes.js"
 import matchRoutes from "./routes/matchRoutes.js"
+import levelRoutes from "./routes/levelRoutes.js"
 import helmet from "helmet"
 import rateLimit from "express-rate-limit"
 import xss from "xss-clean"
@@ -49,6 +50,7 @@ app.use("/api/users", userRoutes)
 app.use("/api/guests", guestRoutes)
 app.use("/api/friendreq", friendReqRoutes)
 app.use("/api/match", matchRoutes)
+app.use("/api/level", levelRoutes)
 
 
 
