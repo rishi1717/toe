@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js"
 import guestRoutes from "./routes/guestRoutes.js"
 import friendReqRoutes from "./routes/friendReqRoutes.js"
 import matchRoutes from "./routes/matchRoutes.js"
+import adminRoutes from "./routes/adminRoutes.js"
 import levelRoutes from "./routes/levelRoutes.js"
 import helmet from "helmet"
 import rateLimit from "express-rate-limit"
@@ -28,7 +29,7 @@ const io = new Server(httpServer, {
 const port = process.env.PORT || 3000
 const limiter = rateLimit({
 	windowMs: 30 * 60 * 1000,
-	max: 100,
+	max: 1000,
 	standardHeaders: true,
 	legacyHeaders: false,
 	message: "Too many requests from this IP, please try again after some time!",
@@ -51,6 +52,7 @@ app.use("/api/guests", guestRoutes)
 app.use("/api/friendreq", friendReqRoutes)
 app.use("/api/match", matchRoutes)
 app.use("/api/level", levelRoutes)
+app.use("/api/admin", adminRoutes)
 
 
 
