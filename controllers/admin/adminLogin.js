@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 const adminLogin = async (req, res) => {
 	try {
 		const { email, password } = req.body
-		const admin = await Admin.findOne({ email })
+		let admin = await Admin.findOne({ email })
 		if (!admin) {
 			return res.status(400).json({
 				message: "Admin not found",
@@ -17,9 +17,10 @@ const adminLogin = async (req, res) => {
 		}
 
 		const token = admin.generateAuthToken(admin)
+        admin = {...admin._doc, token, password: undefined}
 		return res.status(200).json({
 			message: "Admin logged in successfully",
-			token,
+			admin,
 		})
 	} catch (err) {
 		console.log(err)

@@ -6,8 +6,7 @@ const levelSchema = new mongoose.Schema(
 		entryFee: { type: Number, required: true },
 		winningAmount: { type: Number, required: true },
 		pointsToWin: { type: Number, required: true },
-	},
-	{ timestamps: true }
+	}
 )
 
 const Levels = mongoose.model("level", levelSchema)

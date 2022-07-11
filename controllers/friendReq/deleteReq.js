@@ -2,7 +2,7 @@ import FriendRequests from "../../models/friendRequests.js"
 
 const cancelRequest = async (req, res) => {
 	try {
-		const ressss = await FriendRequests.findOneAndDelete({
+		const res = await FriendRequests.findOneAndDelete({
 			_id: req.params.id,
 		})
 		res.status(200).json({ message: "Friend request deleted!" })
