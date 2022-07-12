@@ -1,4 +1,5 @@
 import { Router } from "express"
+import getMatchDetails from "../controllers/matches/getMatchDetails.js"
 import getRequests from "../controllers/matches/getRequests.js"
 import getSentRequests from "../controllers/matches/getSentRequests.js"
 import makeMove from "../controllers/matches/makeMove.js"
@@ -8,6 +9,8 @@ import matchRequest from "../controllers/matches/matchRequest.js"
 const router = Router()
 
 router.get('/:id', getRequests)
+
+router.get('/details/:id', getMatchDetails)
 
 router.get('/sentrequests/:id/', getSentRequests)
 

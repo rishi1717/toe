@@ -14,7 +14,7 @@ const matchRequest = async (req, res) => {
 			status: "requested",
 		})
 		await match.save()
-		res.status(200).json({ message: "Match request sent!" })
+		res.status(200).json({ message: "Match request sent!", match })
 	} catch (err) {
 		console.log(err.message)
 		res.status(500).send(err.message)

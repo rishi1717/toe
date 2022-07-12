@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema(
 		referalId: { type: String, unique: true, sparse: true },
 		referalCount: { type: Number, default: 0 },
 		referalAmount: { type: Number, default: 0 },
+		socketId: { type: String,},
 	},
 	{ timestamps: true }
 )
