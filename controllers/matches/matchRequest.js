@@ -5,15 +5,15 @@ const matchRequest = async (req, res) => {
 		const { player1, player2, entryFee } = req.body
 		const winningAmount = entryFee * 2 * (9 / 10)
         const income = entryFee * 2 * (1 / 10)
-		const match = new Matches({
+		await new Matches({
 			player1,
 			player2,
 			entryFee,
 			winningAmount,
 			income,
 			status: "requested",
-		})
-		await match.save()
+		}).save()
+		const match = await Matches.findOne({ player1, player2 }).populate("player1 player2")
 		res.status(200).json({ message: "Match request sent!", match })
 	} catch (err) {
 		console.log(err.message)

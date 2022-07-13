@@ -29,15 +29,15 @@ const makeMove = async (req, res) => {
 		for (let line of lines) {
 			winner = line.every((index) => {
 				return (
-					match.playerXMoves.includes(index) ||
-					match.playerOMoves.includes(index)
+					match.player1Moves.includes(index) ||
+					match.player2Moves.includes(index)
 				)
 			})
 			if (winner) {
 				await Matches.findByIdAndUpdate(matchId, {
 					$set: { winner: match.player1 },
 				})
-				return res.status(200).json({ message: "Match won!" })
+				return res.status(200).json({ message: "Match won!", match })
 			}
 		}
 
@@ -47,7 +47,7 @@ const makeMove = async (req, res) => {
 		if (match.status !== "accepted") {
 			return res.status(400).json({ message: "Match not accepted" })
 		}
-		res.status(200).json(match)
+		res.status(200).send({ message: "Move made!", match })
 	} catch (err) {
 		console.log(err.message)
 		res.status(500).send(err.message)

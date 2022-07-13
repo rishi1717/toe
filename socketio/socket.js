@@ -45,7 +45,7 @@ export default (io, socket) => {
 	socket.on("acceptMatch", ({ to }) => {
 		try {
 			console.log(socket.id, "id: ", to)
-			socket.to(to).emit("acceptMatch", {
+			io.emit("acceptMatch", {
 				from: socket.id,
 			})
 		} catch (err) {
