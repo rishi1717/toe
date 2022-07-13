@@ -13,10 +13,11 @@ const lines = [
 
 const makeMove = async (req, res) => {
 	try {
-		let winner = false
+		let winner1 = false,
+			winner2 = false
 		const { player, move } = req.body
 		const matchId = req.params.id
-		const match = await Matches.findByIdAndUpdate(
+		let match = await Matches.findByIdAndUpdate(
 			matchId,
 			{
 				$push: {
@@ -24,19 +25,35 @@ const makeMove = async (req, res) => {
 				},
 			},
 			{ new: true }
-		)
+		).populate("player1 player2")
 
 		for (let line of lines) {
-			winner = line.every((index) => {
-				return (
-					match.player1Moves.includes(index) ||
-					match.player2Moves.includes(index)
-				)
+			winner1 = line.every((index) => {
+				return match.player1Moves.includes(index)
 			})
-			if (winner) {
-				await Matches.findByIdAndUpdate(matchId, {
-					$set: { winner: match.player1 },
-				})
+			winner2 = line.every((index) => {
+				return match.player2Moves.includes(index)
+			})
+			if (winner1) {
+				match = await Matches.findByIdAndUpdate(
+					matchId,
+					{
+						$set: { winner: match.player1 },
+					},
+					{ new: true }
+				).populate("player1 player2 winner")
+				global.io.emit("matchUpdate", match)
+				return res.status(200).json({ message: "Match won!", match })
+			}
+			if (winner2) {
+				match = await Matches.findByIdAndUpdate(
+					matchId,
+					{
+						$set: { winner: match.player2 },
+					},
+					{ new: true }
+				).populate("player1 player2 winner")
+				global.io.emit("matchUpdate",{})
 				return res.status(200).json({ message: "Match won!", match })
 			}
 		}

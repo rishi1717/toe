@@ -25,6 +25,7 @@ const io = new Server(httpServer, {
 		origin: "*",
 	}
 })
+global.io = io
 
 const port = process.env.PORT || 3000
 const limiter = rateLimit({
