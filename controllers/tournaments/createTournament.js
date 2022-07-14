@@ -2,7 +2,8 @@ import Tournaments from "../../models/tournamentModel.js"
 
 const createTournament = async (req, res) => {
 	try {
-		const { name, noOfPlayers, pointsToWin, entryFee, host } = req.body
+		const { name, noOfPlayers, pointsToWin, entryFee, host, closed } =
+			req.body
 		const winnerAmount = entryFee * numberOfPlayers * 0.6
 		const runnerUpAmount = entryFee * numberOfPlayers * 0.3
 		const income = entryFee * numberOfPlayers * 0.1
@@ -14,6 +15,7 @@ const createTournament = async (req, res) => {
 			winnerAmount,
 			runnerUpAmount,
 			income,
+			closed,
 			status: "pending",
 			tournamentDate: new Date(),
 			host,

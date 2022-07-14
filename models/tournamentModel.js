@@ -7,6 +7,7 @@ const tournamentSchema = new mongoose.Schema({
 	playersJoined: { type: Number, default: 0 },
 	eliminatedPlayers: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
 	remainingPlayers: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+	closed: { type: Boolean, default: false },
 	pointsToWin: { type: Number, required: true },
 	entryFee: { type: Number, required: true },
 	winnerAmount: { type: Number, required: true },
