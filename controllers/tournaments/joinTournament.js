@@ -9,6 +9,7 @@ const joinTournament = async (req, res) => {
 			return res.status(404).json({ message: "Tournament not found" })
 		}
         tournament.players.push(user)
+        tournament.remainingPlayers.push(user)
         tournament.playersJoined += 1
         tournament.save()
         res.status(200).send({ message: "Tournament joined", tournament })

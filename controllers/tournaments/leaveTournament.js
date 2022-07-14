@@ -11,6 +11,9 @@ const leaveTournament = async (req, res) => {
 		tournament.players = tournament.players.filter(
 			(player) => player.toString() !== user.toString()
 		)
+		tournament.remainingPlayers = tournament.remainingPlayers.filter(
+			(player) => player.toString() !== user.toString()
+		)
 		tournament.playersJoined -= 1
 		tournament.save()
 		res.status(200).send({ message: "Tournament left", tournament })
