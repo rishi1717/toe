@@ -15,9 +15,9 @@ router.get("/:id", getTournamentDetails)
 
 router.get("/", getTournaments)
 
-router.patch("/:id/:userId", joinTournament)
+router.patch("/join/:id", joinTournament)
 
-router.patch("/:id/:userId", leaveTournament)
+router.patch("/leave/:id", leaveTournament)
 
 router.patch("/:id", updateTournament)
 
