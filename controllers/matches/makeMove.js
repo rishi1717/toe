@@ -13,9 +13,7 @@ const lines = [
 
 const makeMove = async (req, res) => {
 	try {
-		let winner1 = false,
-			winner2 = false,
-			points1 = false,
+		let points1 = false,
 			points2 = false
 		const { player, move } = req.body
 		const matchId = req.params.id
@@ -36,9 +34,7 @@ const makeMove = async (req, res) => {
 			return res.status(400).json({ message: "Match not accepted" })
 		}
 
-		winner1 = match.player1Points === match.pointsToWin
-		winner2 = match.player2Points === match.pointsToWin
-		if (winner1) {
+		if (match.player1Points === match.pointsToWin) {
 			match = await Matches.findByIdAndUpdate(
 				matchId,
 				{
@@ -46,10 +42,10 @@ const makeMove = async (req, res) => {
 				},
 				{ new: true }
 			).populate("player1 player2 winner")
-			global.io.emit("matchUpdate")
+			global.io.emit("winnerUpdate")
 			return res.status(200).json({ message: "Match won!", match })
 		}
-		if (winner2) {
+		if (match.player2Points === match.pointsToWin) {
 			match = await Matches.findByIdAndUpdate(
 				matchId,
 				{
@@ -57,7 +53,7 @@ const makeMove = async (req, res) => {
 				},
 				{ new: true }
 			).populate("player1 player2 winner")
-			global.io.emit("matchUpdate")
+			global.io.emit("winnerUpdate")
 			return res.status(200).json({ message: "Match won!", match })
 		}
 
@@ -77,6 +73,31 @@ const makeMove = async (req, res) => {
 					},
 					{ new: true }
 				).populate("player1 player2 winner")
+
+				if (match.player1Points === match.pointsToWin) {
+					match = await Matches.findByIdAndUpdate(
+						matchId,
+						{
+							$set: { winner: match.player1 },
+						},
+						{ new: true }
+					).populate("player1 player2 winner")
+					global.io.emit("winnerUpdate")
+					return res.status(200).json({ message: "Match won!", match })
+				}
+
+				if (match.player2Points === match.pointsToWin) {
+					match = await Matches.findByIdAndUpdate(
+						matchId,
+						{
+							$set: { winner: match.player2 },
+						},
+						{ new: true }
+					).populate("player1 player2 winner")
+					global.io.emit("winnerUpdate")
+					return res.status(200).json({ message: "Match won!", match })
+				}
+				
 				global.io.emit("pointUpdate")
 				return res.status(200).json({ message: "Points won!", match })
 			}
