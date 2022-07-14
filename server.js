@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js"
 import guestRoutes from "./routes/guestRoutes.js"
 import friendReqRoutes from "./routes/friendReqRoutes.js"
 import matchRoutes from "./routes/matchRoutes.js"
+import tournamentRoutes from "./routes/tournamentRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import levelRoutes from "./routes/levelRoutes.js"
 import helmet from "helmet"
@@ -23,7 +24,7 @@ const httpServer = createServer(app)
 const io = new Server(httpServer, {
 	cors: {
 		origin: "*",
-	}
+	},
 })
 global.io = io
 
@@ -52,10 +53,9 @@ app.use("/api/users", userRoutes)
 app.use("/api/guests", guestRoutes)
 app.use("/api/friendreq", friendReqRoutes)
 app.use("/api/match", matchRoutes)
+app.use("/api/tournament", tournamentRoutes)
 app.use("/api/level", levelRoutes)
 app.use("/api/admin", adminRoutes)
-
-
 
 app.all("*", (req, res, next) => {
 	const err = new Error(`Can't find ${req.originalUrl} on this server!`)
