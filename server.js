@@ -31,7 +31,7 @@ global.io = io
 const port = process.env.PORT || 3000
 const limiter = rateLimit({
 	windowMs: 30 * 60 * 1000,
-	max: 1000,
+	max: 10000,
 	standardHeaders: true,
 	legacyHeaders: false,
 	message: "Too many requests from this IP, please try again after some time!",

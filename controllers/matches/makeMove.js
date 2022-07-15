@@ -23,6 +23,7 @@ const makeMove = async (req, res) => {
 				$push: {
 					[`${player}Moves`]: move,
 				},
+				turn : player === "player1" ? "player2" : "player1",
 			},
 			{ new: true }
 		).populate("player1 player2 winner")
@@ -86,18 +87,6 @@ const makeMove = async (req, res) => {
 					return res.status(200).json({ message: "Match won!", match })
 				}
 
-				if (match.player2Points === match.pointsToWin) {
-					match = await Matches.findByIdAndUpdate(
-						matchId,
-						{
-							$set: { winner: match.player2 },
-						},
-						{ new: true }
-					).populate("player1 player2 winner")
-					global.io.emit("winnerUpdate")
-					return res.status(200).json({ message: "Match won!", match })
-				}
-				
 				global.io.emit("pointUpdate")
 				return res.status(200).json({ message: "Points won!", match })
 			}
@@ -110,6 +99,17 @@ const makeMove = async (req, res) => {
 					},
 					{ new: true }
 				).populate("player1 player2 winner")
+				if (match.player2Points === match.pointsToWin) {
+					match = await Matches.findByIdAndUpdate(
+						matchId,
+						{
+							$set: { winner: match.player2 },
+						},
+						{ new: true }
+					).populate("player1 player2 winner")
+					global.io.emit("winnerUpdate")
+					return res.status(200).json({ message: "Match won!", match })
+				}
 				global.io.emit("pointUpdate")
 				return res.status(200).json({ message: "Points won!", match })
 			}
