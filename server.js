@@ -22,6 +22,7 @@ connect
 const app = express()
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
+	pingTimeout: 60000*5,
 	cors: {
 		origin: "*",
 	},

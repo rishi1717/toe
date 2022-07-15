@@ -3,6 +3,8 @@ import Users from "../models/userModel.js"
 
 export default (io, socket) => {
 	let userId = null
+
+
 	socket.on("connection", async ({ _id }) => {
 		try {
 			userId = _id
@@ -51,5 +53,10 @@ export default (io, socket) => {
 		} catch (err) {
 			console.log(err.message)
 		}
+	})
+
+	socket.on('setup',(data)=>{
+		socket.join(data._id)
+		socket.emit('connected')
 	})
 }

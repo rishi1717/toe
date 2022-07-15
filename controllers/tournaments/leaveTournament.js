@@ -15,6 +15,11 @@ const leaveTournament = async (req, res) => {
 			(player) => player.toString() !== user.toString()
 		)
 		tournament.playersJoined -= 1
+
+		if (tournament.playersJoined < tournament.noOfPlayers) {
+			tournament.status = "pending"
+		}
+
 		tournament.save()
 		res.status(200).send({ message: "Tournament left", tournament })
 	} catch (err) {
