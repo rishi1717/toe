@@ -25,7 +25,7 @@ const joinTournament = async (req, res) => {
 			tournament.status = "ongoing"
 		}
 		tournament.save()
-		global.io.emit("playerJoined", tournament)
+		// global.io.emit("playerJoined", tournament)
 		res.status(200).send({ message: "Tournament joined", tournament })
 	} catch (err) {
 		console.log(err)

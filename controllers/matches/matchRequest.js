@@ -17,7 +17,7 @@ const matchRequest = async (req, res) => {
 
 		const match = await Matches.findOne({ _id }).populate("player1 player2")
 
-		global.io.emit("matchRequest", match)
+		// global.io.emit("matchRequest", match)
 
 		res.status(200).json({ message: "Match request sent!", match })
 	} catch (err) {

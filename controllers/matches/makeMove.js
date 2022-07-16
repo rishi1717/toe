@@ -43,7 +43,7 @@ const makeMove = async (req, res) => {
 				},
 				{ new: true }
 			).populate("player1 player2 winner")
-			global.io.emit("winnerUpdate")
+			// global.io.emit("winnerUpdate")
 			return res.status(200).json({ message: "Match won!", match })
 		}
 		if (match.player2Points === match.pointsToWin) {
@@ -54,7 +54,7 @@ const makeMove = async (req, res) => {
 				},
 				{ new: true }
 			).populate("player1 player2 winner")
-			global.io.emit("winnerUpdate")
+			// global.io.emit("winnerUpdate")
 			return res.status(200).json({ message: "Match won!", match })
 		}
 
@@ -83,11 +83,11 @@ const makeMove = async (req, res) => {
 						},
 						{ new: true }
 					).populate("player1 player2 winner")
-					global.io.emit("winnerUpdate")
+					// global.io.emit("winnerUpdate")
 					return res.status(200).json({ message: "Match won!", match })
 				}
 
-				global.io.emit("pointUpdate")
+				// global.io.emit("pointUpdate")
 				return res.status(200).json({ message: "Points won!", match })
 			}
 			if (points2) {
@@ -107,14 +107,14 @@ const makeMove = async (req, res) => {
 						},
 						{ new: true }
 					).populate("player1 player2 winner")
-					global.io.emit("winnerUpdate")
+					// global.io.emit("winnerUpdate")
 					return res.status(200).json({ message: "Match won!", match })
 				}
-				global.io.emit("pointUpdate")
+				// global.io.emit("pointUpdate")
 				return res.status(200).json({ message: "Points won!", match })
 			}
 		}
-		global.io.emit("matchUpdate")
+		// global.io.emit("matchUpdate")
 		res.status(200).send({ message: "Move made!", match })
 	} catch (err) {
 		console.log(err.message)

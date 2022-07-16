@@ -16,6 +16,7 @@ const matchSchema = new mongoose.Schema(
 		pointsToWin: { type: Number, default: 1 },
 		matchDate: { type: Date, default: Date.now() },
 		turn : { type: String, default: "player1" },
+		messages: [{}],
 	}
 )
 
