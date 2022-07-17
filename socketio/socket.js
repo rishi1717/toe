@@ -3,6 +3,8 @@ import Users from "../models/userModel.js"
 
 export default (io, socket) => {
 	let userId = null
+
+	//Connection
 	socket.on("online", async (data) => {
 		userId = data._id
 		await Users.findOneAndUpdate(
@@ -13,19 +15,19 @@ export default (io, socket) => {
 		socket.broadcast.emit("onlineUpdate")
 	})
 
+	//match setup
 	socket.on("setup", (userData) => {
 		socket.join(userData._id)
-		console.log(`${userData._id} has joined`)
 		socket.emit("connected")
 	})
 
+	//joining match
 	socket.on("joinMatch", (room) => {
 		socket.join(room)
-		console.log(`joined the room ${room}`)
 	})
 
+	//sending message
 	socket.on("newMessage", async (newMessage) => {
-		console.log("newMessage")
 		const match = await sendMessage(newMessage)
 
 		if (newMessage.matchData.player1._id !== newMessage.sender) {
@@ -39,8 +41,8 @@ export default (io, socket) => {
 		}
 	})
 
+	// making match move
 	socket.on("makeMove", async (data) => {
-		console.log("makeMove")
 		const sentTo =
 			data.match.player1._id === data.user
 				? data.match.player2._id
@@ -48,16 +50,45 @@ export default (io, socket) => {
 		socket.in(sentTo).emit("moveMade", data)
 	})
 
-	socket.on("disconnect", async (socket) => {
+	// disconnection
+	socket.on("disconnect", async () => {
 		try {
-			console.log(userId)
-			await Users.updateOne(
-				{ _id: userId},
-				{ $set: { active: false } }
-			)
-			// socket.broadcast.emit("onlineUpdate")
+			if (userId) {
+				let user = await Users.updateOne(
+					{ _id: userId },
+					{ $set: { active: false } },
+					{ new: true }
+				)
+				socket.broadcast.emit("onlineUpdate")
+			}
 		} catch (err) {
 			console.log(err.message)
 		}
+	})
+	socket.on("disconnection", async () => {
+		try {
+			if (userId) {
+				let user = await Users.updateOne(
+					{ _id: userId },
+					{ $set: { active: false } },
+					{ new: true }
+				)
+				socket.broadcast.emit("onlineUpdate")
+			}
+		} catch (err) {
+			console.log(err.message)
+		}
+	})
+
+	// friend req page
+	socket.on("friendPage", async (data) => {
+		socket.join(data)
+		socket.emit("connected")
+	})
+
+	// match request
+	socket.on("matchRequest", async (data) => {
+		console.log("matchRequest", data)
+		socket.in(data.player2._id).emit("gotMatchRequest", data)
 	})
 }
