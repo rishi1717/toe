@@ -1,4 +1,5 @@
 import sendMessage from "../controllers/matches/sendMessage.js"
+import sendTournamentMessage from "../controllers/tournaments/sendTournamentMessage.js"
 import Users from "../models/userModel.js"
 
 export default (io, socket) => {
@@ -47,7 +48,9 @@ export default (io, socket) => {
 			data.match.player1._id === data.user
 				? data.match.player2._id
 				: data.match.player1._id
-		socket.in(sentTo).emit("moveMade", data)
+		setTimeout(() => {
+			socket.in(sentTo).emit("moveMade", data)
+		}, 300)
 	})
 
 	// disconnection
@@ -87,8 +90,41 @@ export default (io, socket) => {
 	})
 
 	// match request
-	socket.on("matchRequest", async (data) => {
-		console.log("matchRequest", data)
+	socket.on(" ", async (data) => {
 		socket.in(data.player2._id).emit("gotMatchRequest", data)
+	})
+
+	//tournament setup
+	socket.on("setupTournament", (userData) => {
+		console.log("user :", userData._id)
+		socket.join(userData._id)
+		socket.emit("connected")
+	})
+
+	socket.on("joinTournament", (room) => {
+		console.log("room : ", room)
+		socket.join(room)
+	})
+
+	//tournament Message
+	socket.on("newTournamentMessage", async (newMessage) => {
+		try {
+			const tournament = await sendTournamentMessage(newMessage)
+			socket.in(tournament._id).emit("tournamentMessageRecieved", tournament)
+			for (let i = 0; i < tournament.players.length; i++) {
+				if (tournament.players[i]._id.toString() !== newMessage.senderId) {
+					console.log(
+						tournament.players[i]._id.toString(),
+						", ",
+						newMessage.senderId
+					)
+					socket
+						.in(tournament.players[i]._id)
+						.emit("tournamentMessageRecieved", tournament)
+				}
+			}
+		} catch (err) {
+			console.log(err.message)
+		}
 	})
 }
