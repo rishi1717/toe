@@ -87,7 +87,7 @@ const makeMove = async (req, res) => {
 					return res.status(200).json({ message: "Match won!", match })
 				}
 
-				// global.io.emit("pointUpdate")
+				global.io.emit("pointUpdate")
 				return res.status(200).json({ message: "Points won!", match })
 			}
 			if (points2) {
@@ -110,7 +110,7 @@ const makeMove = async (req, res) => {
 					// global.io.emit("winnerUpdate")
 					return res.status(200).json({ message: "Match won!", match })
 				}
-				// global.io.emit("pointUpdate")
+				global.io.emit("pointUpdate")
 				return res.status(200).json({ message: "Points won!", match })
 			}
 		}
