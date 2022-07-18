@@ -110,19 +110,11 @@ export default (io, socket) => {
 	socket.on("newTournamentMessage", async (newMessage) => {
 		try {
 			const tournament = await sendTournamentMessage(newMessage)
-			socket.in(tournament._id).emit("tournamentMessageRecieved", tournament)
-			for (let i = 0; i < tournament.players.length; i++) {
-				if (tournament.players[i]._id.toString() !== newMessage.senderId) {
-					console.log(
-						tournament.players[i]._id.toString(),
-						", ",
-						newMessage.senderId
-					)
-					socket
-						.in(tournament.players[i]._id)
-						.emit("tournamentMessageRecieved", tournament)
-				}
-			}
+
+			socket.broadcast
+				.to(newMessage.tournamentData._id)
+				.emit("tournamentMessageRecieved", tournament)
+
 		} catch (err) {
 			console.log(err.message)
 		}
