@@ -1,5 +1,6 @@
 import sendMessage from "../controllers/matches/sendMessage.js"
 import sendTournamentMessage from "../controllers/tournaments/sendTournamentMessage.js"
+import Tournaments from "../models/tournamentModel.js"
 import Users from "../models/userModel.js"
 
 export default (io, socket) => {
@@ -14,6 +15,22 @@ export default (io, socket) => {
 			{ new: true }
 		)
 		socket.broadcast.emit("onlineUpdate")
+	})
+
+	// disconnection
+	socket.on("disconnect", async (data) => {
+		try {
+			if (userId) {
+				let user = await Users.updateOne(
+					{ _id: userId },
+					{ $set: { active: false } },
+					{ new: true }
+				)
+				socket.broadcast.emit("onlineUpdate")
+			}
+		} catch (err) {
+			console.log(err.message)
+		}
 	})
 
 	//match setup
@@ -53,36 +70,6 @@ export default (io, socket) => {
 		}, 300)
 	})
 
-	// disconnection
-	socket.on("disconnect", async () => {
-		try {
-			if (userId) {
-				let user = await Users.updateOne(
-					{ _id: userId },
-					{ $set: { active: false } },
-					{ new: true }
-				)
-				socket.broadcast.emit("onlineUpdate")
-			}
-		} catch (err) {
-			console.log(err.message)
-		}
-	})
-	socket.on("disconnection", async () => {
-		try {
-			if (userId) {
-				let user = await Users.updateOne(
-					{ _id: userId },
-					{ $set: { active: false } },
-					{ new: true }
-				)
-				socket.broadcast.emit("onlineUpdate")
-			}
-		} catch (err) {
-			console.log(err.message)
-		}
-	})
-
 	// friend req page
 	socket.on("friendPage", async (data) => {
 		socket.join(data)
@@ -96,13 +83,11 @@ export default (io, socket) => {
 
 	//tournament setup
 	socket.on("setupTournament", (userData) => {
-		console.log("user :", userData._id)
 		socket.join(userData._id)
 		socket.emit("connected")
 	})
 
 	socket.on("joinTournament", (room) => {
-		console.log("room : ", room)
 		socket.join(room)
 	})
 
@@ -114,9 +99,37 @@ export default (io, socket) => {
 			socket.broadcast
 				.to(newMessage.tournamentData._id)
 				.emit("tournamentMessageRecieved", tournament)
-
 		} catch (err) {
 			console.log(err.message)
 		}
+	})
+
+	//tournament start
+	socket.on("startTournament", async (data) => {
+		const tournament = await Tournaments.findOne({ _id: data }).populate(
+			"remainingPlayers"
+		)
+		const players = tournament.remainingPlayers
+		const scheduled = tournament.nextMatches.some((match) => {
+			return match.status === "pending"
+		})
+
+		if (scheduled) {
+			socket.broadcast.to(data).emit("tournamentStarted", tournament)
+			console.log("tournament scheduled already")
+			return
+		}
+
+		for (let i = 0; i < players.length; i += 2) {
+			const match = {
+				player1: players[i],
+				player2: players[i + 1],
+				tournament: tournament._id,
+				status: "pending",
+			}
+			tournament.nextMatches.push(match)
+		}
+		await tournament.save()
+		socket.broadcast.to(data).emit("tournamentStarted", tournament)
 	})
 }

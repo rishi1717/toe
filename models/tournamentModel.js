@@ -17,7 +17,7 @@ const tournamentSchema = new mongoose.Schema({
 	tournamentDate: { type: Date, required: true },
 	players: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
 	messages: [{}],
-	matches: [{}]
+	nextMatches: [{}]
 })
 
 tournamentSchema.index(
