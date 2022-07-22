@@ -10,6 +10,7 @@ import matchRoutes from "./routes/matchRoutes.js"
 import tournamentRoutes from "./routes/tournamentRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import levelRoutes from "./routes/levelRoutes.js"
+import tournamentMatchesRoutes from "./routes/tournamentMatchesRoutes.js"
 import helmet from "helmet"
 import rateLimit from "express-rate-limit"
 import xss from "xss-clean"
@@ -58,6 +59,7 @@ app.use("/api/match", matchRoutes)
 app.use("/api/tournament", tournamentRoutes)
 app.use("/api/level", levelRoutes)
 app.use("/api/admin", adminRoutes)
+app.use("/api/tournamentmatch", tournamentMatchesRoutes)
 
 app.all("*", (req, res, next) => {
 	const err = new Error(`Can't find ${req.originalUrl} on this server!`)
