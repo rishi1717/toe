@@ -4,6 +4,13 @@ const createTournament = async (req, res) => {
 	try {
 		const { name, noOfPlayers, pointsToWin, entryFee, host, closed } =
 			req.body
+
+		const exists = await Tournaments.findOne({ name })
+
+		if (exists) {
+			return res.status(400).json({ message: "Tournament already exists!" })
+		}
+
 		const winnerAmount = entryFee * noOfPlayers * 0.6
 		const runnerUpAmount = entryFee * noOfPlayers * 0.3
 		const income = entryFee * noOfPlayers * 0.1
@@ -21,7 +28,7 @@ const createTournament = async (req, res) => {
 			host,
 			players: [host],
 			playersJoined: 1,
-            remainingPlayers: [host],
+			remainingPlayers: [host],
 		})
 		tournament.save()
 		res.status(200).send({ message: "Tournament created", tournament })

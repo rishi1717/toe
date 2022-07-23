@@ -12,7 +12,6 @@ const startTournamentMatch = async (req, res) => {
 	const match = await TournamentMatches.findOne({ _id }).populate(
 		"player1 player2"
 	)
-	console.log(match)
 	// global.io.emit("matchRequest", match)
 
 	res.status(200).json({ message: "Match request sent!", match })
