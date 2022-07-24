@@ -116,7 +116,6 @@ export default (io, socket) => {
 
 		if (scheduled) {
 			socket.broadcast.to(data).emit("tournamentStarted", tournament)
-			console.log("tournament scheduled already")
 			return
 		}
 

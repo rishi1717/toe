@@ -15,11 +15,6 @@ const tournamentMatchSchema = new mongoose.Schema({
 	messages: [{}],
 })
 
-tournamentMatchSchema.index(
-	{ matchDate: 1 },
-	{ expireAfterSeconds: 60, partialFilterExpression: { status: "requested" } }
-)
-
 const TournamentMatches = mongoose.model(
 	"tournamentMatch",
 	tournamentMatchSchema

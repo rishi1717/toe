@@ -12,7 +12,7 @@ const joinTournament = async (req, res) => {
 			return res.status(400).json({ message: "Tournament is full" })
 		}
 		if (
-			tournament.players.map((player) => player.toString()).includes(user)
+			 tournament.players.map((player) => player.toString()).includes(user)
 		) {
 			return res
 				.status(201)
